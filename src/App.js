@@ -1,22 +1,23 @@
+import React, { useTransition } from 'react'
 import logo from './logo.svg';
+import { lazyLoad } from './lazyLoad';
 import './App.css';
+// import TodaysDay from './TodaysDay';
+// const TodaysDay = React.lazy(() => import('./TodaysDay'))
+const TodaysDay = lazyLoad('./TodaysDay')
+
 
 function App() {
+  const [isPending, startTransition] = useTransition()
+  const [showTodayDay, setShowTodayDay] = React.useState(false)
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <button onClick={() => { startTransition(() => { setShowTodayDay(prev => !prev) }) }}>What is today?</button>
+        {isPending && "loading"}
+        {/* {showTodayDay && <TodaysDay />} */}
+        <React.Suspense fallback="loading...">{showTodayDay && <TodaysDay />}</React.Suspense>
       </header>
     </div>
   );
